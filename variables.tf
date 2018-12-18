@@ -10,5 +10,6 @@ variable "ssh_key_name" {
   default = "mission-control"
 }
 
-variable "cnc_hosts_count" {}
-variable "prey_hosts_count" {}
+variable "demo_hosts_count" {
+  default = 1
+}

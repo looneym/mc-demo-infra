@@ -1,5 +1,5 @@
-[cnc]
-${cnc}
+[demo_hosts]
+${demo_hosts}
 
 [prey]
 ${prey}

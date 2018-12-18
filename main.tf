@@ -21,7 +21,7 @@ module "network" {
   source = "./common/network"
 }
 
-module "cnc" {
+module "demo_hosts" {
   source                 = "./modules/ec2"
   ami                    = "${data.aws_ami.docker.id}"
   count                  = "${var.cnc_hosts_count}"
@@ -31,25 +31,14 @@ module "cnc" {
   instance_type          = "t2.small"
 }
 
-module "prey" {
-  source                 = "./modules/ec2"
-  ami                    = "${data.aws_ami.docker.id}"
-  count                  = "${var.prey_hosts_count}"
-  subnet_id              = "${module.network.subnet_id}"
-  vpc_security_group_ids = ["${module.network.sg_ssh_id}", "${module.network.sg_web_id}"]
-  key_name               = "${var.ssh_key_name}"
-  instance_type          = "t2.small"
-}
 
 data "template_file" "ansible_inventory_template" {
   template = "${file("${path.module}/templates/ansible_inventory")}"
   depends_on = [
-    "module.cnc",
-    "module.prey",
+    "module.demo_hosts",
   ]
   vars {
-   cnc = "${join("\n", module.cnc.instance_public_ips)}"
-   prey = "${join("\n", module.prey.instance_public_ips)}"
+   demo_hosts = "${join("\n", module.demo_hosts.instance_public_ips)}"
   }
 }
 
